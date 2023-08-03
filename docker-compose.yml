@@ -1,0 +1,29 @@
+version: "3"
+services:
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+    volumes:
+      - ./volumes/mongo-data:/data/db
+    networks:
+      - blog-posts
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_URI=mongodb://mongo:mongo@database:27017/auth
+      - PORT=8080
+    ports:
+      - 8080:8080
+    networks:
+      - blog-posts
+    depends_on:
+      - database
+
+networks:
+  blog-posts:
