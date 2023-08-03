@@ -12,22 +12,21 @@ const userSchema = new mongoose.Schema<UserDocument>(
   },
 );
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   let user = this as UserDocument;
-  if (user.isModified("password")) {
+  if (!user.isModified("password")) {
     return next();
   }
-
-  const hash = await argon2.hash(user.password);
+  const hash = await argon2.hash(user.password, {});
   user.password = hash;
   return next();
 });
 
-userSchema.methods.checkPassword = async function(
+userSchema.methods.checkPassword = async function (
   password: string,
 ): Promise<boolean> {
   const user = this as UserDocument;
-  return argon2.verify(password, user.password).catch((_) => false);
+  return argon2.verify(user.password, password).catch((_) => false);
 };
 
 const UserModel: mongoose.Model<UserDocument> = mongoose.model(
