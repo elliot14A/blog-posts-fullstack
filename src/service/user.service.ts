@@ -14,3 +14,25 @@ export async function createUser(
     throw new Error(err);
   }
 }
+
+export async function validatePassword({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    return false;
+  }
+  console.log("jere");
+
+  const validPassword = await user.checkPassword(password);
+
+  if (!validPassword) {
+    return false;
+  }
+
+  return omit(user, "password");
+}

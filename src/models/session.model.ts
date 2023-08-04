@@ -18,6 +18,6 @@ const sessionSchema = new mongoose.Schema(
   },
 );
 
-const SessionModel = mongoose.model("Schema", sessionSchema);
+const SessionModel = mongoose.model("Session", sessionSchema);
 
 export default SessionModel;

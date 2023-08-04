@@ -1,29 +1,35 @@
 import jwt from "jsonwebtoken";
 import logger from "./logger";
 
+interface Claims {
+  id: string;
+  email: string;
+  sessionId: string;
+}
+
 export function signJwt(
-  payload: Object,
+  payload: Claims,
   options?: jwt.SignOptions | undefined,
 ) {
-  const privateKey = process.env.JWT_PRIVATE_KEY;
-  if (!privateKey) {
-    logger.error("private key not set");
+  const secret = process.env.JWT_PRIVATE_KEY;
+  if (!secret) {
+    logger.error("private key is not set");
     process.exit();
   }
-  return jwt.sign(payload, privateKey!, {
+  return jwt.sign(payload, secret, {
     ...(options && options),
-    algorithm: "RS256",
+    algorithm: "RS512",
   });
 }
 
 export function verifyJwt(token: string) {
-  const publicKey = process.env.JWT_PUBLIC_KEY;
-  if (!publicKey) {
-    logger.error("public key not set");
+  const secret = process.env.JWT_PUBLIC_KEY;
+  if (!secret) {
+    logger.error("private key is not set");
     process.exit();
   }
   try {
-    const decoded = jwt.verify(token, publicKey!);
+    const decoded = jwt.verify(token, secret);
     return {
       valid: true,
       expired: false,

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { createSession, validatePassword } from "../service/session.service";
+import { createSession, getSessions } from "../service/session.service";
 import { signJwt } from "../utils/jwt";
+import { validatePassword } from "../service/user.service";
 
 export async function login(req: Request, res: Response) {
   // check password
@@ -16,11 +17,12 @@ export async function login(req: Request, res: Response) {
 
   // create accessToken
   const accessTokenTtl = process.env.ACCESSTOKENTTL || "15m";
-  const refreshTokenTtl = process.env.REFRESHTOKENTTL || "15m";
+  const refreshTokenTtl = process.env.REFRESHTOKENTTL || "1y";
   const accessToken = signJwt(
     {
-      ...user,
-      sessionId: session._id,
+      id: user._id,
+      email: user.email,
+      sessionId: session._id.toString(),
     },
     {
       expiresIn: accessTokenTtl,
@@ -29,8 +31,9 @@ export async function login(req: Request, res: Response) {
 
   const refreshToken = signJwt(
     {
-      ...user,
-      sessionId: session._id,
+      id: user._id,
+      email: user.email,
+      sessionId: session._id.toString(),
     },
     {
       expiresIn: refreshTokenTtl,
@@ -38,4 +41,11 @@ export async function login(req: Request, res: Response) {
   );
 
   return res.status(201).json({ refreshToken, accessToken });
+}
+
+export async function getUserSessions(req: Request, res: Response) {
+  const id = res.locals.user.id;
+  console.log(id);
+  const sessions = await getSessions(id, true);
+  return res.json(sessions);
 }
