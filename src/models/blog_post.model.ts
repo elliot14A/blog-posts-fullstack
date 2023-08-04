@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { UserDocument } from "./user.model";
-import { nanoid } from "nanoid";
+import { v4 as uuid } from "uuid";
 
 export enum Tag {
   Programming = "programming",
@@ -33,7 +33,7 @@ const blogPostSchema = new mongoose.Schema(
       required: true,
       unique: true,
       default: function() {
-        return nanoid(10);
+        return uuid();
       },
     },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -43,12 +43,15 @@ const blogPostSchema = new mongoose.Schema(
   },
 );
 
-export interface BlogPostDocument extends mongoose.Document {
+export interface BlogPostInput {
   userId: UserDocument["_id"];
   tag: Tag;
   title: string;
   content: string;
   image: string;
+}
+
+export interface BlogPostDocument extends mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
 }

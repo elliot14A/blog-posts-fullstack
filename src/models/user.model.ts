@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
   },
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function(next) {
   let user = this as UserDocument;
   if (!user.isModified("password")) {
     return next();
@@ -22,7 +22,7 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-userSchema.methods.checkPassword = async function (
+userSchema.methods.checkPassword = async function(
   password: string,
 ): Promise<boolean> {
   const user = this as UserDocument;
@@ -34,10 +34,13 @@ const UserModel: mongoose.Model<UserDocument> = mongoose.model(
   userSchema,
 );
 
-export interface UserDocument extends mongoose.Document {
+export interface UserInput {
   email: string;
   name: string;
   password: string;
+}
+
+export interface UserDocument extends UserInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
   checkPassword(password: string): Promise<boolean>;

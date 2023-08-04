@@ -1,12 +1,8 @@
 import { SchemaDefinitionType } from "mongoose";
-import UserModel, { UserDocument } from "../models/user.model";
+import UserModel, { UserDocument, UserInput } from "../models/user.model";
 import { omit } from "lodash";
 
-export async function createUser(
-  input: SchemaDefinitionType<
-    Omit<UserDocument, "createdAt" | "updatedAt" | "checkPassword">
-  >,
-) {
+export async function createUser(input: UserInput) {
   try {
     const user = await UserModel.create(input);
     return omit(user.toJSON(), "password");

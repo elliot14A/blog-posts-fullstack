@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { TypeOf, z } from "zod";
 
 export const createSessionSchema = z.object({
   body: z.object({
@@ -6,3 +6,5 @@ export const createSessionSchema = z.object({
     password: z.string({ required_error: "password is required field" }),
   }),
 });
+
+export type CreateSessionSchema = TypeOf<typeof createSessionSchema>;

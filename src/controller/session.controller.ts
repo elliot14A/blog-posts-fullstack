@@ -6,8 +6,12 @@ import {
 } from "../service/session.service";
 import { signJwt } from "../utils/jwt";
 import { validatePassword } from "../service/user.service";
+import { CreateSessionSchema } from "../schema/session.schema";
 
-export async function login(req: Request, res: Response) {
+export async function login(
+  req: Request<any, any, CreateSessionSchema["body"]>,
+  res: Response,
+) {
   // check password
   const user = await validatePassword(req.body);
   if (!user) {
