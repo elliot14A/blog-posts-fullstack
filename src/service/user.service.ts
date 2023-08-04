@@ -26,7 +26,6 @@ export async function validatePassword({
   if (!user) {
     return false;
   }
-  console.log("jere");
 
   const validPassword = await user.checkPassword(password);
 
@@ -35,4 +34,8 @@ export async function validatePassword({
   }
 
   return omit(user, "password");
+}
+
+export async function getUserById({ id }: { id: string }) {
+  return await UserModel.findById(id).lean();
 }

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import logger from "./logger";
 
-interface Claims {
+export interface Claims {
   id: string;
   email: string;
   sessionId: string;
@@ -29,15 +29,13 @@ export function verifyJwt(token: string) {
     process.exit();
   }
   try {
-    const decoded = jwt.verify(token, secret);
+    const decoded = jwt.verify(token, secret) as Claims;
     return {
-      valid: true,
       expired: false,
       decoded,
     };
   } catch (err: any) {
     return {
-      valid: false,
       expired: err.message === "jwt expired",
       decoded: null,
     };
