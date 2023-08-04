@@ -1,5 +1,4 @@
-import { SchemaDefinitionType } from "mongoose";
-import UserModel, { UserDocument, UserInput } from "../models/user.model";
+import UserModel, { UserInput } from "../models/user.model";
 import { omit } from "lodash";
 
 export async function createUser(input: UserInput) {

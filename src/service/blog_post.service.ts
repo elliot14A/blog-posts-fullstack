@@ -4,45 +4,35 @@ import BlogPostModel, {
   BlogPostInput,
 } from "../models/blog_post.model";
 
-interface PaginateOptions {
+interface Pagination<T> {
+  data: T[];
+  total: number;
   page?: number;
-  limit?: number;
 }
 
 export async function createBlogPost(input: BlogPostInput) {
-  try {
-    const blogPost = await BlogPostModel.create(input);
-    return blogPost.toJSON();
-  } catch (err: any) {
-    throw new Error(err);
-  }
+  const blogPost = await BlogPostModel.create(input);
+  return blogPost.toJSON();
 }
 
-export async function getBlogPostById(
+export async function getOneBlogPost(
   query: FilterQuery<BlogPostDocument>,
   options: QueryOptions = { lean: true },
 ) {
-  return await BlogPostModel.findOne(query, {}, options).lean();
+  return await BlogPostModel.findOne<BlogPostDocument>(query, {}, options);
 }
 
-export async function getAllBlogByUserId(
+export async function getManyBlogPosts(
   query: FilterQuery<BlogPostDocument>,
   options: QueryOptions = { lean: true },
-  { page, limit }: PaginateOptions,
 ) {
-  const skip = page && limit ? page * limit : 0;
-  return await BlogPostModel.find(query, {}, options)
-    .skip(skip)
-    .limit(limit || 0)
-    .lean();
-}
-
-export async function getAllBlogPost({ page, limit }: PaginateOptions) {
-  const skip = page && limit ? page * limit : 0;
-  return await BlogPostModel.find({})
-    .skip(skip)
-    .limit(limit || 0)
-    .lean();
+  const total = await BlogPostModel.countDocuments(query);
+  const blogPosts = await BlogPostModel.find(query, options);
+  const response: Pagination<BlogPostDocument> = {
+    data: blogPosts,
+    total,
+  };
+  return response;
 }
 
 export async function updatePostById(
@@ -53,7 +43,7 @@ export async function updatePostById(
   return await BlogPostModel.findOneAndUpdate(query, update, options).lean();
 }
 
-export async function deletePostById(
+export async function deleteBlogPostById(
   query: FilterQuery<BlogPostDocument>,
   options: QueryOptions = { lean: true },
 ) {

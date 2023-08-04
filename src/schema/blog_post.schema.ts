@@ -63,10 +63,12 @@ export const getBlogPostByIdSchema = z.object({
   }),
 });
 
-export const getAllPostByUserIdSchema = z.object({
+export const getAllBlogPostsSchema = z.object({
   query: z.object({
     page: z.string().optional(),
     limit: z.string().optional(),
+    word: z.string().optional(),
+    tag: z.nativeEnum(Tag).optional(),
   }),
 });
 
@@ -74,4 +76,4 @@ export type CreateBlogPostSchema = TypeOf<typeof createBlogPostSchema>;
 export type UpdateBlogPostSchema = TypeOf<typeof updateBlogPostSchema>;
 export type DeleteBlogPostSchema = TypeOf<typeof deleteBlogPostSchema>;
 export type GetBlogPostByIdSchema = TypeOf<typeof getBlogPostByIdSchema>;
-export type GetAllPostByUserIdSchema = TypeOf<typeof getAllPostByUserIdSchema>;
+export type GetAllBlogPostsSchema = TypeOf<typeof getAllBlogPostsSchema>;

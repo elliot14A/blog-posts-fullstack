@@ -51,7 +51,7 @@ export interface BlogPostInput {
   image: string;
 }
 
-export interface BlogPostDocument extends mongoose.Document {
+export interface BlogPostDocument extends BlogPostInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
 }
