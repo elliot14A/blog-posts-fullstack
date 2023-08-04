@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { Claims } from "../utils/jwt";
-import SessionModel from "../models/session.model";
 import { getSessionById } from "../service/session.service";
 
 export default async (

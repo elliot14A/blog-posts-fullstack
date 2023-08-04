@@ -4,26 +4,35 @@ services:
     image: mongo
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongo
     volumes:
-      - ./volumes/mongo-data:/data/db
+      - ./volumes/blog-posts/mongo-data:/data/db
     networks:
       - blog-posts
-  server:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    environment:
-      - MONGO_URI=mongodb://mongo:mongo@database:27017/auth
-      - PORT=8080
-    ports:
-      - 8080:8080
-    networks:
-      - blog-posts
-    depends_on:
-      - database
 
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9002:9002"
+    volumes:
+      - ~/factly/blog-posts/minio/data:/export
+      - ~/factly/blog-posts/minio/config:/root/.minio
+    environment:
+      - MINIO_ACCESS_KEY=miniokey
+      - MINIO_SECRET_KEY=miniosecret
+    networks:
+      - blog-posts
+    command: server -console-address :9002 /export
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    networks:
+      - blog-posts
+    entrypoint: >
+      /bin/sh -c " apk add --no-cache bash; wait-for-it.sh minio:9000 -- echo 'Minio is up. Creating the bucket!!'; /usr/bin/mc config host add myminio http://minio:9000 miniokey miniosecret; /usr/bin/mc mb myminio/blog-posts; /usr/bin/mc anonymous set public myminio/blog-posts; exit 0; "
 networks:
   blog-posts:
