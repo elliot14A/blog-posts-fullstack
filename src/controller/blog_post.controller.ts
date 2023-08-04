@@ -21,8 +21,10 @@ export async function createBlogPostHandler(
   res: Response<any, { user: Claims }>,
 ) {
   const userId = res.locals.user.id;
+  console.log(userId);
   try {
     const blogPost = await createBlogPost({ ...req.body, userId });
+    console.log(blogPost);
     return res.status(201).json(blogPost);
   } catch (error) {
     logger.error(error);
@@ -39,18 +41,21 @@ export async function updateBlogPostHandler(
   res: Response<any, { user: Claims }>,
 ) {
   const userId = res.locals.user.id;
+  console.log(userId);
   const { blogPostId } = req.params;
   try {
+    console.log(blogPostId);
     const blogPost = await getOneBlogPost({ blogPostId });
     if (!blogPost) {
       return res.sendStatus(404);
     }
-    if (blogPost.userId !== userId) {
+    if (blogPost.userId.toString() !== userId) {
       return res.sendStatus(401);
     }
     const updatedBlogPost = await updatePostById(
       { userId, blogPostId },
       { ...req.body },
+      { new: true },
     );
     return res.json(updatedBlogPost);
   } catch (error) {
@@ -80,13 +85,13 @@ export async function deleteBlogPostHanlder(
   }
 }
 
-export function getBlogPostByIdHandler(
+export async function getBlogPostByIdHandler(
   req: Request<GetBlogPostByIdSchema["params"]>,
   res: Response,
 ) {
   const { blogPostId } = req.params;
   try {
-    const blogPost = getOneBlogPost({ blogPostId });
+    const blogPost = await getOneBlogPost({ blogPostId });
     if (!blogPost) {
       return res.sendStatus(404);
     }
@@ -102,7 +107,6 @@ export async function getAllPostByUserIdHandler(
   res: Response<any, { user: Claims }>,
 ) {
   const userId = res.locals.user.id;
-  // default page = 1, limit = 5
   const { skip, limit } = convertQueryToPagination(req.query);
   try {
     const result = await getManyBlogPosts({ userId }, { skip, limit });
@@ -124,8 +128,8 @@ export async function getAllBlogPostsHandler(
   try {
     const result = await getManyBlogPosts(
       {
-        title: { $regex: word, $options: "i" },
-        tag: { $regex: tag, $options: "i" },
+        title: { $regex: word || /./, $options: "i" },
+        tag: { $regex: tag || /./, $options: "i" },
       },
       { skip, limit },
     );

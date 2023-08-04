@@ -27,7 +27,7 @@ export async function getManyBlogPosts(
   options: QueryOptions = { lean: true },
 ) {
   const total = await BlogPostModel.countDocuments(query);
-  const blogPosts = await BlogPostModel.find(query, options);
+  const blogPosts = await BlogPostModel.find(query, {}, options);
   const response: Pagination<BlogPostDocument> = {
     data: blogPosts,
     total,
@@ -40,6 +40,7 @@ export async function updatePostById(
   update: UpdateQuery<BlogPostDocument>,
   options: QueryOptions = { lean: true },
 ) {
+  console.log(query, update);
   return await BlogPostModel.findOneAndUpdate(query, update, options).lean();
 }
 

@@ -1,10 +1,6 @@
 import { TypeOf, z } from "zod";
 import { Tag } from "../models/blog_post.model";
 
-const params = z.object({
-  blogpostId: z.string(),
-});
-
 export const createBlogPostSchema = z.object({
   body: z.object({
     title: z
@@ -14,7 +10,7 @@ export const createBlogPostSchema = z.object({
       .string({
         required_error: "content is a required field",
       })
-      .min(150, "content should be atleast 150 chars long"),
+      .min(800, "content should be atleast 150 words long"),
     image: z
       .string({
         required_error: "image is a required field",

@@ -12,7 +12,9 @@ import validate_jwt from "./middleware/validate_jwt";
 import authorize from "./middleware/authorize";
 import {
   createBlogPostSchema,
+  deleteBlogPostSchema,
   getAllBlogPostsSchema,
+  updateBlogPostSchema,
 } from "./schema/blog_post.schema";
 import {
   createBlogPostHandler,
@@ -20,16 +22,17 @@ import {
   getBlogPostByIdHandler,
   deleteBlogPostHanlder,
   updateBlogPostHandler,
+  getAllBlogPostsHandler,
 } from "./controller/blog_post.controller";
 
 export function initroutes(): express.Router {
   const router = express.Router();
   router.use(validate_jwt);
   router.get("/health", (_: Request, res: Response) => res.sendStatus(200));
-  router.post("/users/register", validate(createUserSchema), register);
-  router.post("/users/login", validate(createSessionSchema), login);
-  router.post("/users/logout", authorize, logout);
-  router.get("/users/sessions", authorize, getUserSessions);
+  router.post("/register", validate(createUserSchema), register);
+  router.post("/login", validate(createSessionSchema), login);
+  router.post("/logout", authorize, logout);
+  router.get("/sessions", authorize, getUserSessions);
   router.post(
     "/blog_posts",
     [validate(createBlogPostSchema), authorize],
@@ -41,18 +44,19 @@ export function initroutes(): express.Router {
     getAllPostByUserIdHandler,
   );
   router.get(
-    "/blog_posts/:blogPostId",
-    [validate(getAllBlogPostsSchema), authorize],
-    getBlogPostByIdHandler,
+    "/blog_posts/all",
+    validate(getAllBlogPostsSchema),
+    getAllBlogPostsHandler,
   );
+  router.get("/blog_posts/:blogPostId", getBlogPostByIdHandler);
   router.put(
     "/blog_posts/:blogPostId",
-    [validate(getAllBlogPostsSchema), authorize],
+    [validate(updateBlogPostSchema), authorize],
     updateBlogPostHandler,
   );
   router.delete(
     "/blog_posts/:blogPostId",
-    [validate(getAllBlogPostsSchema), authorize],
+    [validate(deleteBlogPostSchema), authorize],
     deleteBlogPostHanlder,
   );
   return router;

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
 import { Claims, verifyJwt } from "../utils/jwt";
 import { reissueAccessToken } from "../service/session.service";
+import logger from "../utils/logger";
 
 export default async (
   req: Request,
