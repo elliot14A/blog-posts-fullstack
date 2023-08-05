@@ -26,4 +26,4 @@ RUN npm run build
 
 EXPOSE 8080
 
-CMD ["node", "main.js"]
+CMD ["node", "build/main.js"]

@@ -2,3 +2,5 @@
 /node_modules
 /build
 /volumes
+/wait-for-it.sh
+.DS_Store
