@@ -6,8 +6,8 @@ export const POST = async (req: Request) => {
   const body = await req.json();
   try {
     const { name, email, password } = registerCredentialsSchema.parse(body);
-    const serverUrl = process.env.BLOG_POSTS_SERVER_URL;
-    const res = await axios.post(serverUrl + "/api/register", {
+    const serverUrl = process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL;
+    await axios.post(serverUrl + "/api/register", {
       name,
       email,
       password,

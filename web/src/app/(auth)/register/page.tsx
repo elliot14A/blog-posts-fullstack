@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodError } from "zod";
@@ -11,10 +11,26 @@ import {
   registerCredentialsSchema,
 } from "@/lib/validators";
 import { toast } from "react-hot-toast";
+import { getUser } from "@/lib/getUser";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface PageProps { }
 
 const Page: FC<PageProps> = () => {
+  const router = useRouter();
+  const refreshToken = Cookies.get("refreshToken");
+  const accessToken = Cookies.get("accessToken");
+  useEffect(() => {
+    getUser({
+      refreshToken: refreshToken || "",
+      accessToken: accessToken || "",
+    }).then((user) => {
+      if (user) {
+        router.replace("/dashboard");
+      }
+    });
+  }, []);
   const [isLoading, setIsLoading] = useState<boolean>();
   const {
     handleSubmit,

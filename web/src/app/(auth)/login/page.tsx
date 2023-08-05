@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodError } from "zod";
@@ -7,12 +7,25 @@ import Button from "@/components/ui/Button";
 import { LoginCredentials, loginCredentialsSchema } from "@/lib/validators";
 import { toast } from "react-hot-toast";
 import axios, { AxiosError } from "axios";
-import cookie from "js-cookie";
 import { useRouter } from "next/navigation";
+import { getUser } from "@/lib/getUser";
+import Cookies from "js-cookie";
 
 interface PageProps { }
 
 const Page: FC<PageProps> = () => {
+  const refreshToken = Cookies.get("refreshToken");
+  const accessToken = Cookies.get("accessToken");
+  useEffect(() => {
+    getUser({
+      refreshToken: refreshToken || "",
+      accessToken: accessToken || "",
+    }).then((user) => {
+      if (user) {
+        router.replace("/dashboard");
+      }
+    });
+  }, []);
   const [isLoading, setIsLoading] = useState<boolean>();
   const {
     handleSubmit,
@@ -28,10 +41,9 @@ const Page: FC<PageProps> = () => {
     try {
       const { email, password } = loginCredentialsSchema.parse(data);
       const res = await axios.post("/api/login", { email, password });
+      Cookies.set("accessToken", res.data.accessToken);
+      Cookies.set("refreshToken", res.data.refreshTokenn);
       setIsLoading(false);
-      // set token in cookie
-      cookie.set("accessToken", res.data.accessToken);
-      cookie.set("refreshToken", res.data.refreshToken);
       router.replace("/dashboard");
     } catch (err) {
       setIsLoading(false);

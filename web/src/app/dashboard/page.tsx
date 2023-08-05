@@ -1,6 +1,6 @@
 import React from "react";
 
-const Page = (props: {}) => {
+const Page = () => {
   return <div>Dashboard</div>;
 };
 

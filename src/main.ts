@@ -4,11 +4,17 @@ import dotenv from "dotenv";
 import { connect } from "./utils/db";
 import logger from "./utils/logger";
 import { initroutes } from "./routes";
+import cors from "cors";
 
 async function main() {
   dotenv.config();
   const app = express();
   app.use(express.json());
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+    }),
+  );
 
   // connect to database
   await connect();

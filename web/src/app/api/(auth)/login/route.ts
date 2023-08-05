@@ -2,21 +2,20 @@ import { loginCredentialsSchema } from "@/lib/validators";
 import axios, { AxiosError } from "axios";
 import { ZodError } from "zod";
 
-export const POST = async (req: Request) => {
+export const POST = async (req: Request, _: Response) => {
   const body = await req.json();
-  console.log("body", body);
   try {
     const { email, password } = loginCredentialsSchema.parse(body);
-    const serverUrl = process.env.BLOG_POSTS_SERVER_URL;
+    const serverUrl = process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL;
     const res = await axios.post(serverUrl + "/api/login", {
       email,
       password,
     });
     return new Response(JSON.stringify(res.data), {
       status: 200,
+      headers: {},
     });
   } catch (err) {
-    console.log("err", err);
     if (err instanceof ZodError) {
       return new Response(JSON.stringify(err), {
         status: 400,
