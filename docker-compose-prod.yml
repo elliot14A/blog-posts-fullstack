@@ -1,0 +1,27 @@
+version: "3"
+services:
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./volumes/blog-posts/mongo-data:/data/db
+    networks:
+      - blog-posts
+
+  server:
+    image: elliot14/blog-posts-fullstack-server
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=${PORT}
+      - ACCESSTOKENTTL=${ACCESSTOKENTTL}
+      - REFRESHTOKENTTL=${REFRESHTOKENTTL}
+      - MONGO_URI=mongodb://database:27017/blog-posts
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - blog-posts
+    depends_on:
+      - database
+networks:
+  blog-posts:
