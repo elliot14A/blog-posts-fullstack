@@ -40,7 +40,6 @@ export async function updatePostById(
   update: UpdateQuery<BlogPostDocument>,
   options: QueryOptions = { lean: true },
 ) {
-  console.log(query, update);
   return await BlogPostModel.findOneAndUpdate(query, update, options).lean();
 }
 

@@ -21,10 +21,8 @@ export async function createBlogPostHandler(
   res: Response<any, { user: Claims }>,
 ) {
   const userId = res.locals.user.id;
-  console.log(userId);
   try {
     const blogPost = await createBlogPost({ ...req.body, userId });
-    console.log(blogPost);
     return res.status(201).json(blogPost);
   } catch (error) {
     logger.error(error);
@@ -41,10 +39,8 @@ export async function updateBlogPostHandler(
   res: Response<any, { user: Claims }>,
 ) {
   const userId = res.locals.user.id;
-  console.log(userId);
   const { blogPostId } = req.params;
   try {
-    console.log(blogPostId);
     const blogPost = await getOneBlogPost({ blogPostId });
     if (!blogPost) {
       return res.sendStatus(404);
