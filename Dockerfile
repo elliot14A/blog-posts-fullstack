@@ -14,14 +14,16 @@ RUN apk add git \
   && update-ca-certificates
 
 
-# copy dependencies
 COPY ./package.json ./
 
 RUN npm install --frozen-lockfile
 
 
-COPY ./ ./
+COPY ./src ./
+COPY ./tsconfig.json ./
 
 RUN npm run build
 
-CMD ["node", "build/main.js"]
+EXPOSE 8080
+
+CMD ["node", "main.js"]
