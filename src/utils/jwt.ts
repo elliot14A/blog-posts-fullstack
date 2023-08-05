@@ -11,19 +11,18 @@ export function signJwt(
   payload: Claims,
   options?: jwt.SignOptions | undefined,
 ) {
-  const secret = process.env.JWT_PRIVATE_KEY;
+  const secret = process.env.JWT_SECRET;
   if (!secret) {
     logger.error("private key is not set");
     process.exit();
   }
   return jwt.sign(payload, secret, {
     ...(options && options),
-    algorithm: "RS512",
   });
 }
 
 export function verifyJwt(token: string) {
-  const secret = process.env.JWT_PUBLIC_KEY;
+  const secret = process.env.JWT_SECRET;
   if (!secret) {
     logger.error("private key is not set");
     process.exit();
