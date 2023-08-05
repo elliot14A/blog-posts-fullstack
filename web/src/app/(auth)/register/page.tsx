@@ -3,7 +3,7 @@
 import { FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z, { ZodError } from "zod";
+import { ZodError } from "zod";
 import axios, { AxiosError } from "axios";
 import Button from "@/components/ui/Button";
 import {

@@ -1,13 +1,14 @@
 "use client";
-
 import { FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z, { ZodError } from "zod";
+import { ZodError } from "zod";
 import Button from "@/components/ui/Button";
 import { LoginCredentials, loginCredentialsSchema } from "@/lib/validators";
 import { toast } from "react-hot-toast";
 import axios, { AxiosError } from "axios";
+import cookie from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface PageProps { }
 
@@ -21,13 +22,17 @@ const Page: FC<PageProps> = () => {
     resolver: zodResolver(loginCredentialsSchema),
   });
 
+  const router = useRouter();
   const login: SubmitHandler<LoginCredentials> = async (data) => {
     setIsLoading(true);
     try {
       const { email, password } = loginCredentialsSchema.parse(data);
-      await axios.post("/api/login", { email, password });
-      toast.success("logged successfully");
+      const res = await axios.post("/api/login", { email, password });
       setIsLoading(false);
+      // set token in cookie
+      cookie.set("accessToken", res.data.accessToken);
+      cookie.set("refreshToken", res.data.refreshToken);
+      router.replace("/dashboard");
     } catch (err) {
       setIsLoading(false);
       if (err instanceof ZodError) {

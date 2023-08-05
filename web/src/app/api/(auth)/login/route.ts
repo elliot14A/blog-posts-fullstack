@@ -12,7 +12,6 @@ export const POST = async (req: Request) => {
       email,
       password,
     });
-    console.log("res", res);
     return new Response(JSON.stringify(res.data), {
       status: 200,
     });

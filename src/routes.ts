@@ -6,6 +6,7 @@ import {
   logout,
   getUserSessions,
   login,
+  userInfo,
 } from "./controller/session.controller";
 import { createSessionSchema } from "./schema/session.schema";
 import validate_jwt from "./middleware/validate_jwt";
@@ -33,6 +34,7 @@ export function initroutes(): express.Router {
   router.post("/login", validate(createSessionSchema), login);
   router.post("/logout", authorize, logout);
   router.get("/sessions", authorize, getUserSessions);
+  router.get("/user_info", authorize, userInfo);
   router.post(
     "/blog_posts",
     [validate(createBlogPostSchema), authorize],

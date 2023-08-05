@@ -32,5 +32,6 @@ export async function validatePassword({
 }
 
 export async function getUserById({ id }: { id: string }) {
-  return await UserModel.findById(id).lean();
+  const user = await UserModel.findById(id).lean();
+  return omit(user, "password");
 }

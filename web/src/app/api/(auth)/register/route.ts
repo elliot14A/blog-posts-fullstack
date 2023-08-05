@@ -12,7 +12,7 @@ export const POST = async (req: Request) => {
       email,
       password,
     });
-    return new Response(JSON.stringify(res.data), {
+    return new Response("OK", {
       status: 201,
     });
   } catch (err) {
