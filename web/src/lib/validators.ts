@@ -21,3 +21,16 @@ export const registerCredentialsSchema = z.object({
 });
 
 export type RegisterCredentials = z.infer<typeof registerCredentialsSchema>;
+
+export const createPostSchema = z.object({
+  title: z
+    .string({ required_error: "title is required" })
+    .min(6, "title should be atleast 6 chars long"),
+  content: z
+    .string({ required_error: "content is required" })
+    .min(800, "content should be atleast 150 word long"),
+  tag: z.enum(["Programming", "Gaming", "Crypto", "Finance"]),
+  image: z.any(),
+});
+
+export type CreatePost = z.infer<typeof createPostSchema>;

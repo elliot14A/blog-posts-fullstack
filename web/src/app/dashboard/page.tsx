@@ -10,7 +10,7 @@ const Page = () => {
     setSelectedTag(tag);
   };
   return (
-    <div className="flex mt-16 md:mt-10">
+    <div className="flex space-x-3 md:space-x-0">
       <div className="flex-1 w-full max-w-sm mx-auto">
         <div className="relative">
           <input

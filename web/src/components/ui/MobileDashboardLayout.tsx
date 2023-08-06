@@ -9,28 +9,7 @@ import { Menu } from "lucide-react";
 import { SideBarLinks } from "../SideBarLinks";
 import { LogoutButton } from "./LogoutButton";
 import { User } from "@/lib/types";
-
-const sidebarLinks: {
-  icon: "Explore" | "User" | "Create";
-  href: string;
-  text: string;
-}[] = [
-    {
-      icon: "Explore",
-      href: "/dashboard",
-      text: "Explore",
-    },
-    {
-      icon: "User",
-      href: "/dashboard/myblogs",
-      text: "My Blogs",
-    },
-    {
-      icon: "Create",
-      href: "/dashboard/myblogs/create",
-      text: "Write a blog",
-    },
-  ];
+import { useRouter } from "next/navigation";
 
 interface MobileDashboardLayoutProps {
   user: User | null;
@@ -44,7 +23,7 @@ export const MobileDashboardLayout: FC<MobileDashboardLayoutProps> = ({
   refreshToken,
 }) => {
   const [open, setOpen] = useState(false);
-
+  const router = useRouter();
   return (
     <div className="top-0 fixed border-black border-b inset-x-0 py-2 px-4">
       <div className="w-full flex justify-between items-center">
@@ -117,19 +96,12 @@ export const MobileDashboardLayout: FC<MobileDashboardLayoutProps> = ({
                             role="list"
                             className="ml-4 flex flex-1 flex-col gap-y-5"
                           >
-                            {sidebarLinks.map(({ icon, href, text }) => {
-                              return (
-                                <SideBarLinks
-                                  icon={icon}
-                                  href={href}
-                                  text={text}
-                                />
-                              );
-                            })}
+                            <SideBarLinks />
                             <LogoutButton
                               user={user!}
                               refreshToken={refreshToken}
                               accessToken={accessToken}
+                              callback={() => router.replace("/login")}
                             />
                           </ul>
                         </nav>

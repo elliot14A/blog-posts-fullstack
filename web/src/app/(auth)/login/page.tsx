@@ -66,7 +66,7 @@ const Page: FC<PageProps> = () => {
   };
   return (
     <form
-      className="w-full max-w-sm mx-auto mt-8"
+      className="container w-full max-w-sm mx-auto mt-8"
       onSubmit={handleSubmit(login)}
     >
       <div className="mb-8 font-bold text-center text-3xl ">Login</div>

@@ -14,33 +14,14 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const sidebarLinks: {
-  icon: "Explore" | "User" | "Create";
-  href: string;
-  text: string;
-}[] = [
-    {
-      icon: "Explore",
-      href: "/dashboard",
-      text: "Explore",
-    },
-    {
-      icon: "User",
-      href: "/dashboard/myblogs",
-      text: "My Blogs",
-    },
-    {
-      icon: "Create",
-      href: "/dashboard/myblogs/create",
-      text: "Write a blog",
-    },
-  ];
-
 const Layout: FC<LayoutProps> = ({ children }) => {
   const refreshToken = Cookies.get("refreshToken");
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
   const { setUser, user } = useUserStore();
+  const logout = async () => {
+    router.replace("/login");
+  };
   useEffect(() => {
     getUser({
       refreshToken: refreshToken || "",
@@ -71,19 +52,16 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           Dashboard
         </Link>
         <nav className="flex flex-1 flex-col">
-          <ul role="list" className="ml-4 flex flex-1 flex-col gap-y-5">
-            {sidebarLinks.map(({ icon, href, text }) => {
-              return <SideBarLinks icon={icon} href={href} text={text} />;
-            })}
-          </ul>
+          <SideBarLinks />
         </nav>
         <LogoutButton
           user={user!}
           accessToken={accessToken || ""}
           refreshToken={refreshToken || ""}
+          callback={() => logout()}
         />
       </div>
-      <div className="container">{children}</div>
+      <div className="container mt-16 md:mt-4">{children}</div>
     </div>
   );
 };

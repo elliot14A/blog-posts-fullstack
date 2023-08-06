@@ -9,26 +9,34 @@ interface LogoutButtonProps {
   user: User;
   accessToken: string;
   refreshToken: string;
+  callback?: () => void;
 }
 
 export const LogoutButton: FC<LogoutButtonProps> = ({
   user,
   accessToken,
   refreshToken,
+  callback,
 }) => {
   const logout = async () => {
-    await axios.post(
-      "/api/logout",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "x-refresh": refreshToken,
+    try {
+      await axios.post(
+        "/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "x-refresh": refreshToken,
+          },
         },
-      },
-    );
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
+      );
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      callback!();
+    }
   };
   return (
     <div className="m-2">
