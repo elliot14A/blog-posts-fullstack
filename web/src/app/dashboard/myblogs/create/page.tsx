@@ -26,7 +26,7 @@ const Page: FC = () => {
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
       console.log(data);
-      const res = await axios.post(
+      await axios.post(
         "/api/blogpost/create",
         {
           image: imageUrl,

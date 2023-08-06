@@ -1,11 +1,7 @@
 "use client";
 
 import BlogPost from "@/components/BlogPost";
-import { getBlogs } from "@/lib/getBlogs";
-import {
-  BlogPostType as BlogPostType,
-  useBlogPostsStore,
-} from "@/lib/zustand/blogpost";
+import { BlogPostType as BlogPostType } from "@/lib/zustand/blogpost";
 import { useUserStore } from "@/lib/zustand/user";
 import axios from "axios";
 import { useState } from "react";

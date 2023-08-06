@@ -21,7 +21,7 @@ const Page = () => {
         {blogPosts.map((post) => (
           <div key={post.id}>
             <BlogPost
-              currentUser={user!.id}
+              currentUser={user?.id || ""}
               id={post.id}
               title={post.title}
               imageUrl={post.imageUrl}

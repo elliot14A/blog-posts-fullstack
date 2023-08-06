@@ -71,8 +71,8 @@ export async function deleteBlogPostHanlder(
     if (!blogPost) {
       return res.sendStatus(404);
     }
-    if (blogPost.userId !== userId) {
-      return res.sendStatus(401);
+    if (blogPost.userId.toString() !== userId) {
+      return res.sendStatus(403);
     }
     await deleteBlogPostById({ blogPostId });
     return res.sendStatus(200);

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const POST = async (req: Request, res: any) => {
+export const POST = async (req: Request, _: any) => {
   try {
     const { word, tag } = await req.json();
     let url =

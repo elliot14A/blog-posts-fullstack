@@ -1,6 +1,11 @@
 import React, { FC } from "react";
 import Link from "next/link";
 import * as lucideReact from "lucide-react";
+import Button from "./ui/Button";
+import DeleteModal from "./ui/DeleteModel";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface BlogPostProps {
   email: string;
@@ -25,6 +30,8 @@ const BlogPost: FC<BlogPostProps> = ({
   currentUser,
   userId,
 }) => {
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+  const router = useRouter();
   return (
     <Link id={id} href={`/dashboard/blogposts/${id}`}>
       <div className="border border-black w-full bg-white rounded-lg p-6 md:p-8 lg:p-10">
@@ -36,7 +43,13 @@ const BlogPost: FC<BlogPostProps> = ({
           <div>
             {currentUser === userId ? (
               <div className="flex items-center gap-5">
-                <lucideReact.Trash className="h-6 w-6" />
+                <lucideReact.Trash
+                  onClick={() => {
+                    console.log(showDeleteModal);
+                    setShowDeleteModal(showDeleteModal ? false : true);
+                  }}
+                  className="h-6 w-6"
+                />
                 <lucideReact.Settings className="h-6 w-6" />
               </div>
             ) : null}
@@ -47,6 +60,16 @@ const BlogPost: FC<BlogPostProps> = ({
         <div className="text-sm text-gray-500">Tags: {tag}</div>
         <div className="text-sm text-gray-500">Contact: {email}</div>
       </div>
+      {showDeleteModal ? (
+        <DeleteModal
+          id={id}
+          handleState={() => setShowDeleteModal(!showDeleteModal)}
+          navigate={() => {
+            router.push("/dashboard");
+            toast.success("deleted successfully");
+          }}
+        />
+      ) : null}
     </Link>
   );
 };
