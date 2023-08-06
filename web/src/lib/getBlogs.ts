@@ -12,7 +12,6 @@ export const getBlogs = async (word?: string, tag?: string) => {
     } else if (tag) {
       url = url + `?tag=${tag.toLowerCase()}`;
     }
-    console.log("url", url);
     const res = await fetch(
       process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL + "/api/blog_posts/all",
       {
@@ -22,7 +21,6 @@ export const getBlogs = async (word?: string, tag?: string) => {
     const blogs: BlogPostType[] = [];
     const userids: Set<string> = new Set();
     const data = await res.json();
-    console.log("data", data);
     data.data.forEach((blog: any) => {
       userids.add(blog.userId);
     });
@@ -34,7 +32,6 @@ export const getBlogs = async (word?: string, tag?: string) => {
         return res.data;
       }),
     ]);
-    console.log("users", users);
     data.data.forEach((blog: any) => {
       blogs.push({
         email: users.find((user) => user._id === blog.userId)?.email,
@@ -55,10 +52,6 @@ export const getBlogs = async (word?: string, tag?: string) => {
 };
 
 export const getBlog = async (id: string) => {
-  console.log("id", id);
-  console.log(
-    process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL + "/api/blog_posts/all",
-  );
   try {
     const res = await axios.get(
       process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL + "/api/blog_posts/" + id,

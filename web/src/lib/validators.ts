@@ -33,4 +33,16 @@ export const createPostSchema = z.object({
   image: z.any(),
 });
 
+export const updatePostSchema = z.object({
+  id: z.string({ required_error: "id is required" }).optional(),
+  title: z
+    .string({ required_error: "title is required" })
+    .min(6, "title should be atleast 6 chars long"),
+  content: z
+    .string({ required_error: "content is required" })
+    .min(800, "content should be atleast 150 word long"),
+  tag: z.enum(["Programming", "Gaming", "Crypto", "Finance"]),
+  image: z.any(),
+});
+export type UpdatePost = z.infer<typeof updatePostSchema>;
 export type CreatePost = z.infer<typeof createPostSchema>;

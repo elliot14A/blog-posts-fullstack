@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import { map } from "lodash";
 
 export const POST = async (req: Request, _: any) => {
   const body = await req.json();

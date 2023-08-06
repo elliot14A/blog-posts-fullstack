@@ -1,29 +1,28 @@
-import { createPostSchema } from "@/lib/validators";
+import { updatePostSchema } from "@/lib/validators";
 import axios, { AxiosError } from "axios";
 import { ZodError } from "zod";
 
-export const POST = async (req: Request, _: Response) => {
+export const PUT = async (req: Request, _: Response) => {
   const body = await req.json();
   try {
-    const { content, title, image, tag } = createPostSchema.parse(body);
+    const { id, content, title, image, tag } = updatePostSchema.parse(body);
     const serverUrl = process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL;
-    const res = await axios.post(
-      serverUrl + "/api/blog_posts",
-      {
-        content,
-        title,
-        image,
-        tag: tag.toLowerCase(),
+    const data: any = {
+      title,
+      content,
+      tag: tag.toLowerCase(),
+    };
+    if (typeof image === "string") {
+      data.image = image;
+    }
+    const res = await axios.put(serverUrl + "/api/blog_posts/" + id, data, {
+      headers: {
+        Authorization: req.headers.get("Authorization"),
+        "x-refresh": req.headers.get("x-refresh"),
       },
-      {
-        headers: {
-          Authorization: req.headers.get("Authorization"),
-          "x-refresh": req.headers.get("x-refresh"),
-        },
-      },
-    );
+    });
     return new Response(JSON.stringify(res.data), {
-      status: 201,
+      status: 200,
     });
   } catch (err) {
     if (err instanceof ZodError) {

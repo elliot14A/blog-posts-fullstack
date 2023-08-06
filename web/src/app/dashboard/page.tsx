@@ -10,7 +10,6 @@ const Page = () => {
   const { user } = useUserStore();
 
   useEffect(() => {
-    console.log("fetching blog posts");
     getBlogs().then((blogs) => setBlogPosts(blogs));
   }, []);
 

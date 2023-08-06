@@ -1,12 +1,6 @@
 import React, { FC } from "react";
-import { Icon, Icons } from "./ui/Icons";
+import { Icons } from "./ui/Icons";
 import Link from "next/link";
-
-interface SideBarLinksProps {
-  icon: Icon;
-  href: string;
-  text: string;
-}
 
 const sidebarLinks: {
   icon: "Explore" | "User" | "Create";

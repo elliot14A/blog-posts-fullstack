@@ -8,6 +8,7 @@ import aws from "aws-sdk";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Button from "@/components/ui/Button";
+import { uploadImage } from "@/lib/utils";
 
 const Page: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +26,6 @@ const Page: FC = () => {
       const imageUrl = await uploadImage(data.image);
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
-      console.log(data);
       await axios.post(
         "/api/blogpost/create",
         {
@@ -146,35 +146,3 @@ const Page: FC = () => {
   );
 };
 export default Page;
-
-const uploadImage = async (image: FileList) => {
-  const endpoint = process.env.NEXT_PUBLIC_S3_ENDPOINT;
-  const accessKeyId = process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY;
-  const bucketName = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
-  const region = process.env.NEXT_PUBLIC_S3_REGION;
-  console.log(endpoint, accessKeyId, secretAccessKey);
-  const s3 = new aws.S3({
-    endpoint,
-    accessKeyId,
-    region,
-    secretAccessKey,
-    s3ForcePathStyle: true,
-    signatureVersion: "v4",
-  });
-  const file = image[0];
-  const buffer = Buffer.from(await file.arrayBuffer());
-  s3.putObject(
-    {
-      Key: file.name,
-      Body: buffer,
-      Bucket: bucketName!,
-    },
-    async (err, data) => {
-      if (err) {
-        throw new Error(err.message);
-      }
-    },
-  );
-  return `${endpoint}/${bucketName}/${file.name}`;
-};

@@ -22,7 +22,6 @@ export const getUser = async (
       newAccessToken,
     };
   } catch (err) {
-    console.log(err);
     return null;
   }
 };

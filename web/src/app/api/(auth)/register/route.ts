@@ -16,7 +16,6 @@ export const POST = async (req: Request) => {
       status: 201,
     });
   } catch (err) {
-    console.log("err", err);
     if (err instanceof ZodError) {
       return new Response(JSON.stringify(err), {
         status: 400,

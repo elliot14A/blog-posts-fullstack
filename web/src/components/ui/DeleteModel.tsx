@@ -4,7 +4,6 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Button from "./Button";
-import { useRouter } from "next/navigation";
 
 interface DeleteModalProps {
   handleState: () => void;
@@ -138,5 +137,4 @@ async function handleDelete(
   } catch (error) {
     console.error(error);
   }
-  console.log(id);
 }

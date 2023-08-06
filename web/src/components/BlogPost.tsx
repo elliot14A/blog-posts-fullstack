@@ -1,11 +1,9 @@
 import React, { FC } from "react";
 import Link from "next/link";
-import * as lucideReact from "lucide-react";
-import Button from "./ui/Button";
 import DeleteModal from "./ui/DeleteModel";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Settings, Trash } from "lucide-react";
 
 interface BlogPostProps {
   email: string;
@@ -43,14 +41,15 @@ const BlogPost: FC<BlogPostProps> = ({
           <div>
             {currentUser === userId ? (
               <div className="flex items-center gap-5">
-                <lucideReact.Trash
+                <Trash
                   onClick={() => {
-                    console.log(showDeleteModal);
                     setShowDeleteModal(showDeleteModal ? false : true);
                   }}
                   className="h-6 w-6"
                 />
-                <lucideReact.Settings className="h-6 w-6" />
+                <Link href={`/dashboard/blogposts/edit/${id}`}>
+                  <Settings className="h-6 w-6" />
+                </Link>
               </div>
             ) : null}
           </div>

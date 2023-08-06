@@ -33,7 +33,7 @@ export const LogoutButton: FC<LogoutButtonProps> = ({
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       callback!();
     }
