@@ -27,6 +27,9 @@ const Page: FC<PageProps> = () => {
       accessToken: accessToken || "",
     }).then((user) => {
       if (user) {
+        if (user.newAccessToken) {
+          Cookies.set("accessToken", user.newAccessToken);
+        }
         router.replace("/dashboard");
       }
     });

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Tokens, User } from "./types";
-export const getUser = async (tokens: Tokens): Promise<User | null> => {
+export const getUser = async (
+  tokens: Tokens,
+): Promise<(User & { newAccessToken: string | undefined }) | null> => {
   const { refreshToken, accessToken } = tokens;
   try {
     const res = await axios.get(
@@ -12,10 +14,12 @@ export const getUser = async (tokens: Tokens): Promise<User | null> => {
         },
       },
     );
+    const newAccessToken = res.headers["x-access-token"];
     return {
       id: res.data._id,
       email: res.data.email,
       name: res.data.name,
+      newAccessToken,
     };
   } catch (err) {
     console.log(err);

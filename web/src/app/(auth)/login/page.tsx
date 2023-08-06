@@ -22,6 +22,9 @@ const Page: FC<PageProps> = () => {
       accessToken: accessToken || "",
     }).then((user) => {
       if (user) {
+        if (user.newAccessToken) {
+          Cookies.set("accessToken", user.newAccessToken);
+        }
         router.replace("/dashboard");
       }
     });
@@ -42,7 +45,7 @@ const Page: FC<PageProps> = () => {
       const { email, password } = loginCredentialsSchema.parse(data);
       const res = await axios.post("/api/login", { email, password });
       Cookies.set("accessToken", res.data.accessToken);
-      Cookies.set("refreshToken", res.data.refreshTokenn);
+      Cookies.set("refreshToken", res.data.refreshToken);
       setIsLoading(false);
       router.replace("/dashboard");
     } catch (err) {

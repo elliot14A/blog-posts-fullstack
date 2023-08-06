@@ -1,8 +1,8 @@
 "use client";
 
 import { SideBarLinks } from "@/components/SideBarLinks";
-import Button from "@/components/ui/Button";
-import { Icons, Icon } from "@/components/ui/Icons";
+import { LogoutButton } from "@/components/ui/LogoutButton";
+import { MobileDashboardLayout } from "@/components/ui/MobileDashboardLayout";
 import { getUser } from "@/lib/getUser";
 import { useUserStore } from "@/lib/zustand/user";
 import Cookies from "js-cookie";
@@ -49,12 +49,21 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       setUser(user);
       if (!user) {
         router.replace("/login");
+      } else if (user.newAccessToken) {
+        Cookies.set("accessToken", user.newAccessToken);
       }
     });
   }, []);
   return (
     <div className="w-full flex h-screen">
-      <div className="flex h-full w-full max-w-[16rem] grow flex-col gap-y-5 overflow-y-auto border-r border-black bg-white">
+      <div className="md:hidden">
+        <MobileDashboardLayout
+          user={user}
+          refreshToken={refreshToken || ""}
+          accessToken={accessToken || ""}
+        />
+      </div>
+      <div className="hidden md:flex h-full w-full max-w-[16rem] grow flex-col gap-y-5 overflow-y-auto border-r border-black bg-white">
         <Link
           className="ml-3 mt-3 flex shrink-0 h-16 text-center font-bold text-3xl"
           href={"/dashboard"}
@@ -68,11 +77,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             })}
           </ul>
         </nav>
-        <div className="m-2">
-          <Button className="w-full overflow-ellipsis truncate">
-            <div className="overflow-ellipsis truncate">{`Logout ${user?.name}`}</div>
-          </Button>
-        </div>
+        <LogoutButton
+          user={user!}
+          accessToken={accessToken || ""}
+          refreshToken={refreshToken || ""}
+        />
       </div>
       <div className="container">{children}</div>
     </div>
