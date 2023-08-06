@@ -7,28 +7,32 @@ import {
   useBlogPostsStore,
 } from "@/lib/zustand/blogpost";
 import { useUserStore } from "@/lib/zustand/user";
+import axios from "axios";
 import { useState } from "react";
 
 const Page = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [blogPosts, setBlogPosts] = useState<BlogPostType[]>([]);
   const [search, setSearch] = useState<string>("");
+  const [blogs, setBlogs] = useState<BlogPostType[] | null>(null);
   const { user } = useUserStore();
   const onClick = async () => {
-    console.log("fetching blog posts");
     if (search === "") {
-      console.log("search is empty");
       return;
     }
     if (selectedTag === "All" || selectedTag === null) {
-      console.log("searching all");
-      const blogs = await getBlogs(search);
-      setBlogPosts(blogs);
+      const res = await axios.post("/api/blogpost/get", {
+        word: search,
+      });
+      const blogs = await getUserDetails(res.data.data);
+      setBlogs(blogs);
       return;
     }
-    console.log("searching with tag");
-    const blogs = await getBlogs(search, selectedTag!);
-    setBlogPosts(blogs);
+    const res = await axios.post("/api/blogpost/get", {
+      word: search,
+      tag: selectedTag,
+    });
+    const blogs = await getUserDetails(res.data.data);
+    setBlogs(blogs);
   };
 
   const tags = ["All", "Crypto", "Finance", "Gaming", "Programming"];
@@ -80,7 +84,7 @@ const Page = () => {
         </div>
       </div>
       <div className="flex flex-col h-full flex-1 gap-4 p-3 overflow-y-auto scrollbar-thumb-red scrollbar-thumb-rounded scrollbar-track-red-lighter scrollbar-w-2 scrolling-touch">
-        {blogPosts.map((post) => (
+        {blogs?.map((post) => (
           <div key={post.id}>
             <BlogPost
               currentUser={user!.id}
@@ -101,3 +105,36 @@ const Page = () => {
 };
 
 export default Page;
+
+const getUserDetails = async (data: any) => {
+  const blogs: BlogPostType[] = [];
+  const userids = new Set();
+  data.forEach((blog: any) => {
+    userids.add(blog.userId);
+  });
+
+  data.forEach((blog: any) => {
+    userids.add(blog.userId);
+  });
+  const users = await Promise.all([
+    ...Array.from(userids).map(async (userid) => {
+      const res = await axios.get(
+        process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL + "/api/user/" + userid,
+      );
+      return res.data;
+    }),
+  ]);
+  data.forEach((blog: any) => {
+    blogs.push({
+      email: users.find((user) => user._id === blog.userId)?.email,
+      name: users.find((user) => user._id === blog.userId)?.name,
+      title: blog.title,
+      content: blog.content,
+      imageUrl: blog.image,
+      tag: blog.tag,
+      id: blog.blogPostId,
+      userId: blog.userId,
+    });
+  });
+  return blogs;
+};
