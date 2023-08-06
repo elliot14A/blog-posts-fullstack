@@ -27,7 +27,7 @@ const Page: FC<PageProps> = ({ params }) => {
         imageUrl={blogPost.imageUrl}
         title={blogPost.title}
         name={blogPost.name}
-        currentUser={user!.id}
+        currentUser={user ? user.id : ""}
         userId={blogPost.userId}
         content={blogPost.content}
         id={blogPost.id}

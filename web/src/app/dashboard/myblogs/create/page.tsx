@@ -57,12 +57,19 @@ const Page: FC = () => {
         Create
       </div>
       <form
-        onSubmit={handleSubmit((data) => {
-          if (!data.image) {
-            toast.error("Please upload an image");
-          }
-          createPost(data);
-        })}
+        onSubmit={handleSubmit(
+          (data) => {
+            if (!data.image) {
+              toast.error("Please upload an image");
+            }
+            createPost(data);
+          },
+          (err) => {
+            if (err.image) {
+              toast.error("Please upload an image");
+            }
+          },
+        )}
         className="mt-5 w-full mx-auto p-4 border rounded-lg border-black "
       >
         <h2 className="text-2xl font-semibold mb-4">Create a New Blog</h2>
