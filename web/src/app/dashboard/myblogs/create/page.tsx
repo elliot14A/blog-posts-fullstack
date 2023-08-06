@@ -45,7 +45,7 @@ const Page: FC = () => {
       reset();
     } catch (err) {
       console.log(err);
-      toast.error("Failed to upload image");
+      toast.error("Failed to create blog");
       return;
     } finally {
       setIsLoading(false);

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { register } from "./controller/user.controller";
+import { getUser, register } from "./controller/user.controller";
 import { validate } from "./middleware/validate";
 import { createUserSchema } from "./schema/user.schema";
 import {
@@ -35,6 +35,7 @@ export function initroutes(): express.Router {
   router.post("/logout", authorize, logout);
   router.get("/sessions", authorize, getUserSessions);
   router.get("/user_info", authorize, userInfo);
+  router.get("/user/:userId", getUser);
   router.post(
     "/blog_posts",
     [validate(createBlogPostSchema), authorize],

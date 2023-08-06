@@ -12,4 +12,11 @@ export const createUserSchema = z.object({
   }),
 });
 
+export const getUserByIdSchema = z.object({
+  params: z.object({
+    userId: z.string({ required_error: "userId is required" }),
+  }),
+});
+
 export type CreateUserSchema = z.TypeOf<typeof createUserSchema>;
+export type GetUserByIdSchema = z.TypeOf<typeof getUserByIdSchema>;

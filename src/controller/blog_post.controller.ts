@@ -141,8 +141,8 @@ function convertQueryToPagination(query: GetAllBlogPostsSchema["query"]): {
   skip: number;
   limit: number;
 } {
-  // default page = 1, limit = 5
-  const { page = "1", limit = "5" } = query;
+  // default page = 1, limit = 20
+  const { page = "1", limit = "20" } = query;
   const skip = page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0;
   return { skip, limit: parseInt(limit) };
 }

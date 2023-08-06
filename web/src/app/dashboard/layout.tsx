@@ -36,7 +36,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     });
   }, []);
   return (
-    <div className="w-full flex h-screen">
+    <div className="w-full flex h-screen overflow-clip">
       <div className="md:hidden">
         <MobileDashboardLayout
           user={user}
@@ -44,7 +44,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           accessToken={accessToken || ""}
         />
       </div>
-      <div className="hidden md:flex h-full w-full max-w-[16rem] grow flex-col gap-y-5 overflow-y-auto border-r border-black bg-white">
+      <div className="hidden top-0 md:flex h-full w-full max-w-[16rem] grow flex-col gap-y-5 border-r border-black bg-white">
         <Link
           className="ml-3 mt-3 flex shrink-0 h-16 text-center font-bold text-3xl"
           href={"/dashboard"}

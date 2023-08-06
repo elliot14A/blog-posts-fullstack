@@ -15,7 +15,7 @@ const sidebarLinks: {
 }[] = [
     {
       icon: "Explore",
-      href: "/dashboard",
+      href: "/dashboard/explore",
       text: "Explore",
     },
     {
@@ -35,7 +35,7 @@ export const SideBarLinks: FC = () => {
       {sidebarLinks.map(({ icon, href, text }) => {
         const Icon = Icons[icon];
         return (
-          <div className="flex space-x-3">
+          <div key={icon} className="flex space-x-3">
             <Icon className="h-6 w-6" />
             <Link className="font-semibold" href={href}>
               {text}
