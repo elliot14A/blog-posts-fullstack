@@ -81,7 +81,6 @@ const Page: FC<PageProps> = ({ params }) => {
               router.push(`/dashboard/blogposts/${blogPostId}`);
             } catch (err) {
               toast.error("Failed to update blog post");
-              console.log(err);
             } finally {
               setIsLoading(false);
             }
@@ -90,7 +89,6 @@ const Page: FC<PageProps> = ({ params }) => {
             if (err.image) {
               toast.error("Please upload an image");
             }
-            console.log(err);
           },
         )}
         className="mt-5 w-full mx-auto p-4 border rounded-lg border-black "

@@ -54,7 +54,6 @@ const Page: FC<PageProps> = () => {
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      console.log(err);
       if (err instanceof ZodError) {
         toast.error(err.message);
         return;

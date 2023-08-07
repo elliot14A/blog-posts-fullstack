@@ -57,17 +57,9 @@ services:
   web:
     build:
       context: ./web
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - 3000:3000
-    environment:
-      - BLOG_POSTS_SERVER_URL=${BLOG_POSTS_SERVER_URL}
-      - NEXT_PUBLIC_BLOG_POSTS_SERVER_URL=${NEXT_PUBLIC_BLOG_POSTS_SERVER_URL}
-      - NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - NEXT_PUBLIC_S3_ACCESS_KEY_ID=${MINIO_SECRET_KEY}
-      - NEXT_PUBLIC_S3_ENDPOINT=${NEXT_PUBLIC_S3_ENDPOINT}
-      - NEXT_PUBLIC_S3_BUCKET_NAME=blog-posts
-      - NEXT_PUBLIC_S3_REGION=us-east-1
     networks:
       - blog-posts
 

@@ -5,7 +5,6 @@ export const POST = async (req: Request, _: Response) => {
     const accessToken = req.headers.get("Authorization");
     const refreshToken = req.headers.get("x-refresh");
     const serverUrl = process.env.BLOG_POSTS_SERVER_URL;
-    console.log("serverUrl", serverUrl);
     await axios.post(
       serverUrl + "/api/logout",
       {},
@@ -25,7 +24,6 @@ export const POST = async (req: Request, _: Response) => {
           { status: 403 },
         );
       }
-      console.log("err", err);
       return new Response(JSON.stringify(err), { status: 500 });
     }
     return new Response(JSON.stringify(err), { status: 500 });

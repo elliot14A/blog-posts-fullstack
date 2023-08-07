@@ -46,7 +46,6 @@ export const getBlogs = async (word?: string, tag?: string) => {
     });
     return blogs;
   } catch (err) {
-    console.log(err);
     return [];
   }
 };
@@ -71,7 +70,6 @@ export const getBlog = async (id: string) => {
       userId: res.data.userId,
     };
   } catch (err) {
-    console.log(err);
     return null;
   }
 };

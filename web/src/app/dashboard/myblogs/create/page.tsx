@@ -44,7 +44,6 @@ const Page: FC = () => {
       toast.success("Blog created successfully");
       router.push(`/dashboard/blogposts/${res.data.blogPostId}`);
     } catch (err) {
-      console.log(err);
       toast.error("Failed to create blog");
       return;
     } finally {
