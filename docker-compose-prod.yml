@@ -6,8 +6,37 @@ services:
       - "27017:27017"
     volumes:
       - ./volumes/blog-posts/mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     networks:
       - blog-posts
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9002:9002"
+    volumes:
+      - ~/factly/blog-posts/minio/data:/export
+      - ~/factly/blog-posts/minio/config:/root/.minio
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    networks:
+      - blog-posts
+    command: server -console-address :9002 /export
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    networks:
+      - blog-posts
+    entrypoint: >
+      /bin/sh -c " apk add --no-cache bash; wait-for-it.sh minio:9000 -- echo 'Minio is up. Creating the bucket!!'; /usr/bin/mc config host add myminio http://minio:9000 miniokey miniosecret; /usr/bin/mc mb myminio/blog-posts; /usr/bin/mc anonymous set public myminio/blog-posts; exit 0; "
 
   server:
     image: elliot14/blog-posts-fullstack-server
@@ -17,7 +46,7 @@ services:
       - PORT=${PORT}
       - ACCESSTOKENTTL=${ACCESSTOKENTTL}
       - REFRESHTOKENTTL=${REFRESHTOKENTTL}
-      - MONGO_URI=mongodb://database:27017/blog-posts
+      - MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@database:27017/blog-posts
       - JWT_SECRET=${JWT_SECRET}
     networks:
       - blog-posts
@@ -28,7 +57,15 @@ services:
       context: ./web
       dockerfile: Dockerfile.dev
     ports:
-      - 80:3000
+      - 3000:3000
+    environment:
+      - BLOG_POSTS_SERVER_URL=${BLOG_POSTS_SERVER_URL}
+      - NEXT_PUBLIC_BLOG_POSTS_SERVER_URL=${NEXT_PUBLIC_BLOG_POSTS_SERVER_URL}
+      - NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - NEXT_PUBLIC_S3_ACCESS_KEY_ID=${MINIO_SECRET_KEY}
+      - NEXT_PUBLIC_S3_ENDPOINT=${NEXT_PUBLIC_S3_ENDPOINT}
+      - NEXT_PUBLIC_S3_BUCKET_NAME=blog-posts
+      - NEXT_PUBLIC_S3_REGION=us-east-1
     networks:
       - blog-posts
 
