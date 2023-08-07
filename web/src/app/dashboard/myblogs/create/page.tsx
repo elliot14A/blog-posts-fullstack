@@ -4,19 +4,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import aws from "aws-sdk";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Button from "@/components/ui/Button";
 import { uploadImage } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const Page: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     handleSubmit,
     register,
     formState: { errors },
-    reset,
   } = useForm<CreatePost>({
     resolver: zodResolver(createPostSchema),
   });
@@ -26,7 +26,7 @@ const Page: FC = () => {
       const imageUrl = await uploadImage(data.image);
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
-      await axios.post(
+      const res = await axios.post(
         "/api/blogpost/create",
         {
           image: imageUrl,
@@ -42,7 +42,7 @@ const Page: FC = () => {
         },
       );
       toast.success("Blog created successfully");
-      reset();
+      router.push(`/dashboard/blogposts/${res.data.blogPostId}`);
     } catch (err) {
       console.log(err);
       toast.error("Failed to create blog");
@@ -59,8 +59,9 @@ const Page: FC = () => {
       <form
         onSubmit={handleSubmit(
           (data) => {
-            if (!data.image) {
+            if (!data.image || data.image.length <= 0) {
               toast.error("Please upload an image");
+              return;
             }
             createPost(data);
           },

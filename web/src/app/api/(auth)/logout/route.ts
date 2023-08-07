@@ -4,7 +4,8 @@ export const POST = async (req: Request, _: Response) => {
   try {
     const accessToken = req.headers.get("Authorization");
     const refreshToken = req.headers.get("x-refresh");
-    const serverUrl = process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL;
+    const serverUrl = process.env.BLOG_POSTS_SERVER_URL;
+    console.log("serverUrl", serverUrl);
     await axios.post(
       serverUrl + "/api/logout",
       {},

@@ -6,7 +6,7 @@ export const POST = async (req: Request, _: Response) => {
   const body = await req.json();
   try {
     const { content, title, image, tag } = createPostSchema.parse(body);
-    const serverUrl = process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL;
+    const serverUrl = process.env.BLOG_POSTS_SERVER_URL;
     const res = await axios.post(
       serverUrl + "/api/blog_posts",
       {

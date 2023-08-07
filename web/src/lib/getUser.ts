@@ -4,6 +4,7 @@ export const getUser = async (
   tokens: Tokens,
 ): Promise<(User & { newAccessToken: string | undefined }) | null> => {
   const { refreshToken, accessToken } = tokens;
+  console.log(process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL);
   try {
     const res = await axios.get(
       process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL + "/api/user_info",

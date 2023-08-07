@@ -5,7 +5,7 @@ export const POST = async (req: Request, _: any) => {
   try {
     const { id } = body;
     await axios.delete(
-      process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL + `/api/blog_posts/${id}`,
+      process.env.BLOG_POSTS_SERVER_URL + `/api/blog_posts/${id}`,
       {
         headers: {
           Authorization: req.headers.get("Authorization"),

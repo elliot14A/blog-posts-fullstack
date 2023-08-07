@@ -6,7 +6,7 @@ export const PUT = async (req: Request, _: Response) => {
   const body = await req.json();
   try {
     const { id, content, title, image, tag } = updatePostSchema.parse(body);
-    const serverUrl = process.env.NEXT_PUBLIC_BLOG_POSTS_SERVER_URL;
+    const serverUrl = process.env.BLOG_POSTS_SERVER_URL;
     const data: any = {
       title,
       content,
