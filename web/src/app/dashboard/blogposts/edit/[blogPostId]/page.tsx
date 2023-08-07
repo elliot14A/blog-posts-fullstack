@@ -31,7 +31,6 @@ const Page: FC<PageProps> = ({ params }) => {
     handleSubmit,
     register,
     formState: { errors },
-    reset,
     setValue,
   } = useForm<UpdatePost>({
     resolver: zodResolver(updatePostSchema),
