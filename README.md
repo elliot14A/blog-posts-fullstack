@@ -31,5 +31,3 @@ then run
 ```
 docker compose -f docker-compose-prod.yml up
 ```
-
-checkout the deployed version at http://65.2.71.246:3000/dashboard/
